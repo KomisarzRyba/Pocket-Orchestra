@@ -2,9 +2,7 @@
 title: Pocket Orchestra
 ---
 
-# 🎻 Pocket Orchestra
-
-**Midterm project for CIM433 Augmented Reality**
+# **Midterm project for CIM433 Augmented Reality**
 
 ## Description
 
@@ -31,4 +29,18 @@ The spatial effect is very subtle though. The limitations of marker based AR do 
 
 ## Implementation issues...
 
+### Marker
+
 Designing a good marker is the key to a successful AR experience. It took a few iterations to arrive at the final solution. Making the card slots have the highest contrast and detailed patterns printed solved all of the issues I had with the markers I initially envisioned.
+
+### Synchronization
+
+Initially, my plan of making the tracks play in sync included using the MIDI format. MIDI, unlike MP3 or WAV files, do not contain any audio information themselves. Rather than that, they contain very specific instructions for a host application, which provides the virtual instruments to perform them *in real time*. That makes them easier to synchronize than the standard audio files. Unfortunately, MIDI comes with lots of limitations, when used outside of regular DAW (Digital Audio Workstation) environment, since in my case such host environment would need to be substituted inside Unity. That comes with the complexity of dealing with external plugins, digital instruments, special export formats, and so on.
+
+Luckily, for the scope of this project utilizing MIDI was unnecesary, as the song I put together used only 8 audio tracks at most. Unity's sound optimization can handle such low amount of audio sources with ease, and did not require me to come up with workarounds. Making the music sound together was as simple as starting all the 8 track at the same time.
+
+**But...**
+
+...how together is together *enough*? Unity's `AudioSource` component has a very convenient public property "Play on awake". At first, right after setting up a simple scene with just 8 AudioSources and a simple `MusicController` script, the time of processing all the initialization events was pretty short. But as soon as I added some more elements, that grab their dependencies on Awake, searching through the scene for specific components, the audio tracks began to play in a noticeable offset. I assume, that Unity's "Play on awake" flag starts the audio playback as soon as the audio file is loaded in memory, which does not happen at the same time for all of them.
+
+A solution was a simple as starting each one of the tracks individually in their Start methods, as at that point they are all allocated in memory.
