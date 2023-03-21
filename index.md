@@ -37,7 +37,7 @@ Designing a good marker is the key to a successful AR experience. It took a few 
 
 Initially, my plan of making the tracks play in sync included using the MIDI format. MIDI, unlike MP3 or WAV files, do not contain any audio information themselves. Rather than that, they contain very specific instructions for a host application, which provides the virtual instruments to perform them *in real time*. That makes them easier to synchronize than the standard audio files. Unfortunately, MIDI comes with lots of limitations, when used outside of regular DAW (Digital Audio Workstation) environment, since in my case such host environment would need to be substituted inside Unity. That comes with the complexity of dealing with external plugins, digital instruments, special export formats, and so on.
 
-Luckily, for the scope of this project utilizing MIDI was unnecesary, as the song I put together used only 8 audio tracks at most. Unity's sound optimization can handle such low amount of audio sources with ease, and did not require me to come up with workarounds. Making the music sound together was as simple as starting all the 8 track at the same time.
+Luckily, for the scope of this project utilizing MIDI was unnecesary, as the song I put together used only 8 audio tracks at most. Unity's sound optimization can handle such low amount of audio sources with ease, and did not require me to come up with workarounds. With the good old MP3's, making the music sound together was as simple as starting all the 8 tracks at the same time.
 
 **But...**
 
