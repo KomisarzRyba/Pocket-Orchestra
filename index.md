@@ -12,7 +12,7 @@ User is given four playing cards - one for each track, and uses them to cover ch
 
 ## Storyboard
 
-![Step1](/images/step1)
+![Cards](/images/cards.jpg) ![Marker](/images/marker.jpg) ![Screenshot](/images/screenshot.png)
 
 ## AR
 ### To button or not to button?
@@ -44,3 +44,19 @@ Luckily, for the scope of this project utilizing MIDI was unnecesary, as the son
 ...how together is together *enough*? Unity's `AudioSource` component has a very convenient public property "Play on awake". At first, right after setting up a simple scene with just 8 AudioSources and a simple `MusicController` script, the time of processing all the initialization events was pretty short. But as soon as I added some more elements, that grab their dependencies on Awake, searching through the scene for specific components, the audio tracks began to play in a noticeable offset. I assume, that Unity's "Play on awake" flag starts the audio playback as soon as the audio file is loaded in memory, which does not happen at the same time for all of them.
 
 A solution was a simple as starting each one of the tracks individually in their Start methods, as at that point they are all allocated in memory.
+
+### Tracking jitter
+
+A really annoying issue I had with my marker is that after covering it with all 4 cards, the camera loses the tracking information from close to half of the marker. That caused the playback to rapidly mute and unmute, resulting in a very annoying stutter.
+
+To solve that, I added a short delay between registering a change in button's `Pressed` status, and actually muting its track. Here's the Update method in the `CardSlot` class that made my music flow continuously:
+
+```c#
+private async void Update() {
+  if (_button.Pressed == _status) return;
+
+  await Task.Delay(_button.Pressed ? 500 : 1000);
+  SlotEventManager.Instance.OnSlotPoseChanged.Invoke(this, _button.Pressed);
+  _status = _button.Pressed;
+}
+```
